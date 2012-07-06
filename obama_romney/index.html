@@ -1,142 +1,106 @@
 <html>
 <head>
+
+<link href="static/css/bootstrap.css" rel="stylesheet">
 <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
-<script type="text/javascript" src="./../static/js/d3.v2.js"></script>
-<link rel="stylesheet" type="text/css" href="/obama_romney/data/colours.css">
-<link href="./../static/css/bootstrap.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
 
+<script type="text/javascript">
 
-<script>
-function draw(data) {
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33193344-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  <script language="javascript">
+  var t;
+
+  function animate(){
+  t=setTimeout('animate(count)', 5000);
+  moveRight();
+  }
+
+  var count=0;
+
+  function moveRight(){
+    count = count+1
+    <!--document.write(count)-->
+    strCount = count
+    if (count<10) {
+        strCount = '0' + count
+    }
+    var newText = document.createTextNode('June ' + strCount + ', 2012');
     
-    var path = d3.geo.path();
+    if (count<30) {
+        if (count>1) {
+            show_image('/obama_romney/svg_animation_obamaObama1/svg_new_'+strCount+'.svg',400,290,'obamaObama',count)
+            show_image2('/obama_romney/svg_animation_romneyRomney1/svg_new_'+strCount+'.svg',400,290,'obamaObama',count)
+        } else {
+            show_image_new('/obama_romney/svg_animation_obamaObama1/svg_new_'+strCount+'.svg',400,290,'obamaObama',count)
+            show_image2_new('/obama_romney/svg_animation_romneyRomney1/svg_new_'+strCount+'.svg',400,290,'obamaObama',count)
+        }
+    } else {
+        clearTimeout(t)
+    }
+  }    
+  
+  function show_image_new(src, width, height, alt,count) {
+    var img = document.createElement("img");
+    img.src = src;
+    img.width = width;
+    img.height = height;
+    img.alt = alt;
+    img.id = count
+    document.body.appendChild(img)
+  }
+  
+  function show_image2_new(src, width, height, alt,count) {
+    var img = document.createElement("img");
+    img.src = src;
+    img.width = width;
+    img.height = height;
+    img.alt = alt;
+    img.id = count
+    document.body.appendChild(img)
+  }
 
-    d3.select(".science_graph")
-      .append("svg")
-      .selectAll("path")
-      .data(data.features)
-      .enter()
-      .append("path")
-        .attr("d", path)
-        .attr("id", function(d) { return d.properties.name })
-        .style("stroke", "white")
-        .style("stroke-width", 1)
-        .on("mouseover", function(d) {
-            d3.selectAll("path")
-              .style("opacity", 0.0)
-            d3.select("#"+d.properties.name)
-              .style("opacity", 1)
-              .style("stroke", "black")
-//            d3.selectAll(".graph_title")
-//              .text(d.properties.name)
-            })
-//        .on("click", function(d) {
-//            window.location="http://bitlyscience.github.com"//d.url
-//        })
-        .on("mouseout", function(d) {
-            d3.select("#"+d.properties.name)
-              .style("stroke", "white")
-            d3.selectAll("path")
-              .style("opacity", 1)
-        })
-}
+  function show_image(src, width, height, alt,count) {
+    var img = document.createElement("img");
+    img.src = src;
+    img.width = width;
+    img.height = height;
+    img.alt = alt;
+    img.id = count
+    var ochild = document.getElementById(count-1)
+    document.body.replaceChild(img,ochild)
+  }
 
-function title(data) {
-    key = {}
-    data.map(function(d) {
-        key[d.name]=d
-    })
-    console.log(key)
+  function show_image2(src, width, height, alt,count) {
+    var img = document.createElement("img");
+    img.src = src;
+    img.width = width;
+    img.height = height;
+    img.alt = alt;
+    img.id = count
+    var ochild = document.getElementById(count-1)
+    document.body.replaceChild(img,ochild)
+  }
 
-    d3.selectAll("path")
-      .on("mouseover", function(d) {
-          console.log("name", d.properties.name)
-          d3.select(".graph_title")
-            .text(key[d.properties.name].title)
-      })
-      .on("mouseout", function(d) {
-          d3.select(".graph_title")
-            .text("")
-      })
-      .on("click", function(d) {
-          window.location=key[d.properties.name].url
-      })
-}
 
-function fill(data) {
-    d3.selectAll("path")
-      .attr("class", function(d) { return "state_" + data[d.properties.name]})
-}
 
-function legend(data) {
-    var margin = 105,
-        width = 920,
-        height = 30,
-        step = 100;
+  function boba(){
+    document.write("HELLO")
+  }
 
-    x_extent = d3.extent(data, function(d){ return d.num })
-    var x_scale = d3.scale.linear()
-        .range([margin, width-margin])
-        .domain(x_extent)
-
-    d3.select(".graph_legend")
-      .selectAll("div.legend")
-      .data(data)
-      .enter()
-      .append('div')
-        .attr("class", "legend")
-        .style("margin-right","0.8em")
-        .style("outline","black solid 1px")
-        .style("color","black")
-        .style("line-height","1.5em")
-        .style("text-align", "center")
-        .style('height', "1.5em")
-        .style("float", "left")
-        .style('width', 105)
-        .text(function(d) {return d.foodtype})
-        .style("background-color", function(d) {
-            return "rgb("+d.color+")"
-            })
-
-}
-
+  </script>
+  
+  <a href="javascript:animate()">Start Animation</a> <a href="javascript:clearTimeout(t)">Stop Animation</a>
+ 
 </script>
-
-<link href="../static/css/bootstrap.css" rel="stylesheet">
-</head>
-
-<body>
-<div id="content">
-
-<script>
-d3.json('/obama_romney/data/us-states.json', draw);
-d3.json('/obama_romney/data/index.json', fill);
-d3.json('/obama_romney/data/title_link.json', title);
-d3.json('/obama_romney/data/color_key.json', legend);
-</script>
-
-<div class="science_title">  
-<h1>Happy Independence Day, ZOMBIES!</h1>
-</div>
-<div class="blerb">
-
-<p>Check out our <a href="http://bitly.com/bundles/annaksmith/i">bundle!</a> </p>
-</div>
-
-<div class="science_graph">
-</div>
-<div class="graph_title">
-</div>
-<div class="graph_legend">
-</div>
-
-<div class="blerb">
-<p></p>
-<p><a href="http://blog.bitly.com/post/26449494972/happy-independence-day-america">Back to the bitly blog</a> or to a <a href="http://bitlyscience.github.com">list of bitly science work.</a>
-</div>
-
-
-</div>
-
-</body>
-</html>
